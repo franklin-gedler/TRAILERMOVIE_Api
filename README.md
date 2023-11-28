@@ -7,7 +7,7 @@ Para ejecutar esta aplicación en tu entorno local, sigue estos pasos:
 Clona este repositorio en tu máquina local utilizando Git:
 
 ```bash
-git clone https://github.com/franklin-gedler/TRAILERMOVIE_APP.git
+git clone https://github.com/franklin-gedler/TRAILERMOVIE_Api.git
 ```
 
 ### 2. Crea un entorno virtual
