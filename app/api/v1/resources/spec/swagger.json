@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://trailermovie-api.onrender.com/api/v1"
+      "url": "https://trailermovieapi.onrender.com/api/v1"
     }
   ],
   "tags": [

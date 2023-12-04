@@ -1,7 +1,7 @@
 # Documentacion 
 
 ### Swagger
-https://trailermovie-api.onrender.com/api/v1/docs
+https://trailermovieapi.onrender.com/api/v1/docs
 
 ## Configuración del Entorno Local
 
