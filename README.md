@@ -1,5 +1,5 @@
 # Documentacion
-https://trailersmovie.onrender.com/api/v1/docs
+https://trailermovie-api.onrender.com/api/v1/docs/
 
 ## Configuración del Entorno Local
 
