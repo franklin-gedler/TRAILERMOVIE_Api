@@ -6,3 +6,5 @@ passlib
 bcrypt
 psycopg2-binary
 sqlalchemy
+unidecode
+flask-swagger-ui

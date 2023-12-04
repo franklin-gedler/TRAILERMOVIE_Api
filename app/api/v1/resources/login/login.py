@@ -1,17 +1,19 @@
 from flask_restful import Resource
-from flask import request, jsonify
+from flask import request
 from passlib.context import CryptContext
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token
 from app.api.v1.models.db import HandlerDB, User
-from config.config import Secrets
+from config.config import Static
 
 class LoginResource(Resource):
     def post(self):
         try:
             db = HandlerDB()
             data_user = request.json
-            username = data_user.get('username')
-            password = data_user.get('password')
+            username = data_user.get('username', None)
+            password = data_user.get('password', None)
+
+            assert username is not None or password is not None, 'payload invalido'
 
             get_user = db.get_data(table=User, column=User.username, find_by=username)
 
@@ -26,5 +28,5 @@ class LoginResource(Resource):
         except Exception as err:
             return {"status": False, "error": str(err)}, 500
 
-        return {"status": True, 'access_token': access_token, 'expires': Secrets.JWT_ACCESS_TOKEN_EXPIRES}, 200
+        return {"status": True, 'access_token': access_token, 'expires': Static.JWT_ACCESS_TOKEN_EXPIRES}, 200
         

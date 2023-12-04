@@ -1,0 +1,611 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Trailers Movie",
+    "description": "This is the documentation for the Trailers Movie API.\n\nApp Web link: [https://trailersmovie.com](https://trailersmovie.onrender.com)",
+    "contact": {
+      "email": "tec.franklin.gedler@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://trailersmovie.onrender.com/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authorize",
+      "description": "Will generate a token so you can make requests"
+    },
+    {
+      "name": "User",
+      "description": "Users control"
+    },
+    {
+      "name": "Peliculas/Series",
+      "description": "Peliculas & series control"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Authorize"
+        ],
+        "summary": "get token",
+        "operationId": "loginResource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "XXXX"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "access_token": "token de acceso",
+                  "expires": "tiempo de expiración del token"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": "Credenciales invalidas"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create/user": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "add user",
+        "operationId": "createuserResource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "allow": {
+                    "type": "string",
+                    "example": "XXXX"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password",
+                  "allow"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "Usuario username creado correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "El Usuario username ya existe",
+                    "No se pudo crear el usuario"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create": {
+      "post": {
+        "tags": [
+          "Peliculas/Series"
+        ],
+        "summary": "add Peliculas/Series",
+        "operationId": "createResource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video_id": {
+                    "type": "string",
+                    "example": "id del video trailer de youtube"
+                  },
+                  "link_img": {
+                    "type": "string",
+                    "example": "link de la imagen"
+                  },
+                  "name_pelicula o name_serie": {
+                    "type": "string",
+                    "example": "nombre de la pelicula o serie"
+                  },
+                  "details": {
+                    "type": "string",
+                    "example": "detalles de la pelicula o serie"
+                  }
+                },
+                "required": [
+                  "video_id",
+                  "link_img",
+                  "name_pelicula",
+                  "name_serie",
+                  "details"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "add OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "Pelicula/Serie name_pelicula/name_serie agregada correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "El usuario current_user No tiene permisos para agregar",
+                    "No se pudo agregar la Pelicula/Serie",
+                    "payload incorrecto o no tienes permisos para la acción"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete/user": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "delete user",
+        "operationId": "deleteuserResource",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Username a eliminar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "Usuario user eliminado correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "payload incorrecto o NO tienes permisos para la acción",
+                    "Usuario user no existe",
+                    "Usuario user no puede eliminarse a si mismo",
+                    "falta el usuario a eliminar"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete": {
+      "delete": {
+        "tags": [
+          "Peliculas/Series"
+        ],
+        "summary": "delete Peliculas/Series",
+        "operationId": "deleteResource",
+        "parameters": [
+          {
+            "name": "name_pelicula or name_serie",
+            "in": "query",
+            "description": "name pelicula o serie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "delete OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "name_pelicula/name_serie eliminado correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "payload incorrecto o NO tienes permisos para la acción",
+                    "name_pelicula/name_serie no existe en Peliculas/Series",
+                    "falta el nombre pelicula/serie a eliminar"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/read/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user",
+        "operationId": "readuserResource",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "result": {
+                    "id": 1,
+                    "username": "username",
+                    "created_at": "2023-11-25T01:03:05.000Z",
+                    "updated_at": "2023-11-25T01:03:05.000Z",
+                    "user_permissions": {
+                      "user_id": 1,
+                      "permission_id": "write/read/disable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "El usuario username esta deshabilitado",
+                    "Falta el valor username",
+                    "El usuario username no existe",
+                    "payload incorrecto o NO tienes permisos para la acción"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/read": {
+      "get": {
+        "tags": [
+          "Peliculas/Series"
+        ],
+        "summary": "get Peliculas/Series",
+        "operationId": "readResource",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name pelicula/serie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "result": {
+                    "id": 1,
+                    "video_id": "code video",
+                    "link_img": "link_img",
+                    "name_pelicula/name_serie": "name",
+                    "details": "sinopsis",
+                    "total_average": 1,
+                    "vote_count": 1,
+                    "created_at": "2023-11-25T01:03:05.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "El usuario esta deshabilitado",
+                    "Falta el valor name",
+                    "No se encontró name en Pelicula o Serie",
+                    "payload incorrecto o NO tienes permisos para la acción"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update/user": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "update user",
+        "operationId": "updateuserResource",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "description": "username to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "allow": {
+                    "type": "string",
+                    "example": "XXXX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "Usuario username actualizado correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "No se ha enviado ningun dato para actualizar",
+                    "payload incorrecto o NO tienes permisos para la acción",
+                    "Usuario user no existe",
+                    "El new name username ya existe"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update": {
+      "put": {
+        "tags": [
+          "Peliculas/Series"
+        ],
+        "summary": "update Peliculas/Series",
+        "operationId": "updateResource",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_name": {
+                    "type": "string",
+                    "example": "nuevo name pelicula/serie"
+                  },
+                  "video_id": {
+                    "type": "string",
+                    "example": "nuevo video_id"
+                  },
+                  "link_img": {
+                    "type": "string",
+                    "example": "nuevo link_img"
+                  },
+                  "details": {
+                    "type": "string",
+                    "example": "nuevo details"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "message": "Pelicula/Serie name actualizado correctamente"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": false,
+                  "error": [
+                    "El usuario {current_user} No tiene permisos para Actualizar",
+                    "No se encontró name en Pelicula o Serie",
+                    "Usuario user no existe",
+                    "param incorrecto o NO tienes permisos para la acción"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}

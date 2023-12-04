@@ -2,11 +2,12 @@
 
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.api.v1.models.db import HandlerDB, User, Pelicula, Serie
+from app.api.v1.models.db import HandlerDB, User
 from flask import request, jsonify
+from unidecode import unidecode
 from app.api.v1.functions.func import check_permissions_read_write, check_key_payload
 
-class ReadResource(Resource):
+class ReadUserResource(Resource):
     @jwt_required()
     def get(self):
         try:
@@ -18,25 +19,21 @@ class ReadResource(Resource):
 
             assert check_permissions_read_write(user), f"El usuario {current_user} esta deshabilitado"
 
-            if check_key_payload(data, 'name'):
+            if check_key_payload(data, 'username'):
 
-                name = request.args.get('name', None)
+                user_to_search = data.get('username', None)
 
-                assert name, 'Falta el valor name'
+                assert user_to_search, 'Falta el valor username'
 
-                # Buscar en las tablas Pelicula y Serie
-                for table_class, column_name in [(Pelicula, Pelicula.name_pelicula), (Serie, Serie.name_serie)]:
-                    data_found = db.get_data(table=table_class, column=column_name, find_by=name)
-                    if not isinstance(data_found, str):
-                        data_found = data_found.as_dict()
-                        break
-                else:
-                    assert False, f"No se encontró '{name}' en Pelicula o Serie"
+                user_found = db.get_data(table=User, column=User.username, find_by=user_to_search, relationship=User.user_permissions)
 
+                assert not isinstance(user_found, str), f"El usuario {unidecode(data['username']).strip().lower()} no existe"
+
+                user_found = user_found.as_dict()
             else:
                 assert False, 'payload incorrecto o NO tienes permisos para la acción'
 
         except Exception as err:
             return {"status": False, "error": str(err)}, 500
         
-        return {"status": True, 'result': data_found}, 200
+        return {"status": True, 'result': user_found}, 200

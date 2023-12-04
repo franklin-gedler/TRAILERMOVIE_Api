@@ -4,7 +4,12 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request, jsonify
 from app.api.v1.models.db import HandlerDB, User, Pelicula, Serie
-from app.api.v1.functions.func import check_keys_payload_user, check_keys_payload_pelicula_serie, check_permissions_only_write
+from unidecode import unidecode
+from app.api.v1.functions.func import (
+    check_permissions_only_write, 
+    check_keys_payload_create_pelicula_serie, 
+    unpack_values_data_create_pelicula_serie
+)
 
 class CreateResource(Resource):
     @jwt_required()
@@ -14,42 +19,29 @@ class CreateResource(Resource):
             current_user = get_jwt_identity()
             data = request.json
 
+            # Obtiene datos del usuario current_user de la base de datos
             user = db.get_data(table=User, column=User.username, find_by=current_user, relationship=User.user_permissions)
 
-            if check_keys_payload_user(data, user):
+            if check_keys_payload_create_pelicula_serie(data, 'pelicula') or check_keys_payload_create_pelicula_serie(data, 'serie'):
 
-                username, password, allow = data['user'].values()
+                assert check_permissions_only_write(user), f"El usuario {current_user} No tiene permisos para agregar"
 
-                result = db.add_user(username=username, password=password, allow=allow)
-
-                assert result is True, 'No se pudo crear el usuario'
-
-                mje = f'Usuario {username} creado correctamente'
+                keys_order = ['video_id', 'link_img', 'details']
             
-            elif check_keys_payload_pelicula_serie(data, 'pelicula'):
-            
-                assert check_permissions_only_write(user), f"El usuario {current_user} No tienes permisos para agregar"
+                if 'name_pelicula' in data:
+                    keys_order.insert(2, 'name_pelicula')
+                    table = Pelicula
+                else:
+                    keys_order.insert(2, 'name_serie')
+                    table = Serie
 
-                video_id, link_img, name_pelicula, details = data['pelicula'].values()
+                values_order = unpack_values_data_create_pelicula_serie(data=data, keys_order=keys_order, unidecode=unidecode)
 
-                result = db.add_data(table=Pelicula, video_id=video_id, link_img=link_img, name_pelicula=name_pelicula, details=details)
+                result = db.add_data(table=table, **dict(zip(keys_order, values_order)))
 
-                assert result is True, 'No se pudo agregar la pelicula'
+                assert result is True, f'No se pudo agregar la {table.__tablename__[:-1].capitalize()}'
 
-                mje = f'Pelicula {name_pelicula} agregada correctamente'
-            
-            elif check_keys_payload_pelicula_serie(data, 'serie'):
-                #assert user.user_permissions[0].permission_id == 2, f"El usuario {current_user} No tienes permisos para agregar"
-
-                assert check_permissions_only_write(user), f"El usuario {current_user} No tienes permisos para agregar"
-
-                video_id, link_img, name_serie, details = data['serie'].values()
-
-                result = db.add_data(table=Serie, video_id=video_id, link_img=link_img, name_serie=name_serie, details=details)
-
-                assert result is True, 'No se pudo agregar la serie'
-
-                mje = f'Serie {name_serie} agregada correctamente'
+                mje = f'{table.__tablename__[:-1].capitalize()} {values_order[2]} agregada correctamente'
 
             else:
                 assert False, 'payload incorrecto o no tienes permisos para la acción'

@@ -7,16 +7,21 @@ class Secrets:
     # La variable SECRET_KEY sigue siendo estática
     EMAIL_ADMIN = os.getenv("EMAIL_ADMIN")
 
-    # Configura el atributo COURIER_AUTH_TOKEN para usar la variable de entorno
-    COURIER_AUTH_TOKEN = os.getenv("COURIER_AUTH_TOKEN")
-
     # Configura el atributo DB_CONFIG para usar la variable de entorno
     DB_CONFIG = os.getenv("DB_CONFIG")
 
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
+    #SECRET_KEY = os.getenv("SECRET_KEY")
+
+
+class Static:
     JWT_ACCESS_TOKEN_EXPIRES = 3600
 
-    SECRET_KEY = os.getenv("SECRET_KEY")
+    # Configuración de Swagger UI
+    SWAGGER_URL = '/api/v1/docs'  # URL para acceder a la interfaz Swagger UI
+    API_URL = '/api/v1/spec'  # Ruta del endpoint para la especificación Swagger
 
-    ID_TEMPLATE_COURIER = os.getenv("ID_TEMPLATE_COURIER")
+    CONFIG_SWAGGER = {
+        'app_name': "Trailer Movie API v1"
+    }
