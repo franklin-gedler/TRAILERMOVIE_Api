@@ -21,3 +21,6 @@ check_permissions_only_write = lambda user: True if user.user_permissions[0].per
 
 # Valida si el usuario tiene permisos de lectura y escritura
 check_permissions_read_write = lambda user: True if user.user_permissions[0].permission_id in [1,2] else False
+
+# Valida si el usuario esta deshabilitado
+check_user_disable = lambda user: True if user.user_permissions[0].permission_id == 3 else False

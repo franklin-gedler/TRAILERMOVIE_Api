@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 from flask_jwt_extended import create_access_token
 from app.api.v1.models.db import HandlerDB, User
 from config.config import Static
+from app.api.v1.functions.func import check_user_disable
 
 class LoginResource(Resource):
     def post(self):
@@ -15,9 +16,11 @@ class LoginResource(Resource):
 
             assert username is not None or password is not None, 'payload invalido'
 
-            get_user = db.get_data(table=User, column=User.username, find_by=username)
+            get_user = db.get_data(table=User, column=User.username, find_by=username, relationship=User.user_permissions)
 
             assert isinstance(get_user, User), 'Usuario no encontrado'
+
+            assert check_user_disable(user=get_user), 'Usuario deshabilitado'
 
             pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

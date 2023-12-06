@@ -78,7 +78,7 @@
               "application/json": {
                 "example": {
                   "status": false,
-                  "error": "Credenciales invalidas"
+                  "error": ["Credenciales invalidas", "Usuario deshabilitado", "payload invalido"]
                 }
               }
             }
