@@ -3,7 +3,7 @@ from flask import request, make_response
 from passlib.context import CryptContext
 from flask_jwt_extended import create_access_token
 from app.api.v1.models.db import HandlerDB, User
-from config.config import Static
+from config.config import Secrets
 from app.api.v1.functions.func import check_user_disable
 
 class LoginResource(Resource):
@@ -33,7 +33,7 @@ class LoginResource(Resource):
         except Exception as err:
             return {"status": False, "error": str(err)}, 500
         
-        resp = {"status": True, 'access_token': access_token, 'expires': Static.JWT_ACCESS_TOKEN_EXPIRES}
+        resp = {"status": True, 'access_token': access_token, 'expires': Secrets.JWT_ACCESS_TOKEN_EXPIRES}
         resp = make_response(resp, 200)
         resp.headers['X-User-Role'] = id_permission_user
 

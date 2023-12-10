@@ -12,12 +12,10 @@ class Secrets:
 
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
-    #SECRET_KEY = os.getenv("SECRET_KEY")
-
+    JWT_ACCESS_TOKEN_EXPIRES = 1800 # 30 minutos
 
 class Static:
-    JWT_ACCESS_TOKEN_EXPIRES = 3600
-
+    
     # Configuración de Swagger UI
     SWAGGER_URL = '/api/v1/docs'  # URL para acceder a la interfaz Swagger UI
     API_URL = '/api/v1/spec'  # Ruta del endpoint para la especificación Swagger
